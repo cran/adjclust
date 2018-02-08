@@ -24,11 +24,14 @@ NULL
 #' @param h band width. It is assumed that the similarity between two items is 0
 #'   when these items are at a distance of more than band width h. Default value
 #'   is \code{ncol(mat)-1}
-#' @param blMin depth of clustering. It is the number of clusters below which 
-#'   the algorithm stops. Default value is 1
-#' @param verbose Currently not used
 #'   
-#' @return An object of class \code{\link{chac}}.
+#' @return An object of class \code{\link{chac}} which describes the tree 
+#' produced by the clustering process. The object a list with the same elements 
+#' as an object of class \code{\link{chac}} (\code{merge}, \code{height}, 
+#' \code{order}, \code{labels}, \code{call}, \code{method}, \code{dist.method}),
+#' and an extra element \code{mat}: the data on which the clustering is 
+#' performed, possibly after pre-transformations described in the vignette 
+#' entitled "Notes on CHAC implementation in adjclust".
 #'   
 #' @seealso \code{\link{snpClust}} to cluster SNPs based on linkage disequilibrium
 #' @seealso \code{\link{hicClust}} to cluster Hi-C data
@@ -68,145 +71,158 @@ NULL
 #' 
 #' @importFrom matrixStats rowCumsums
 #' @importFrom matrixStats colCumsums
+#' @importFrom Matrix diag
+#' @importFrom Matrix t
+#' @importFrom Matrix isSymmetric
 
 adjClust <- function(mat, type = c("similarity", "dissimilarity"), 
-                     h = ncol(mat) - 1, blMin = 1, verbose = FALSE) {
+                     h = ncol(mat) - 1) {
+  # sanity checks for inputs
+  ## class of 'mat'
+  CLASS <- c("matrix", "dgCMatrix", "dsCMatrix", "dist")
+  classcheck <- pmatch(class(mat), CLASS)
+  if (is.na(classcheck)) {
+    stop("Input matrix class not supported")
+  }
+  if (classcheck == -1) {
+    stop("Ambiguous matrix class")
+  }
+  inclass <- CLASS[classcheck]
+  
+  ## 'type' 
+  type <- match.arg(type)
+  
+  ## 'inclass' and 'mat'
+  if (inclass == "dist") {
+    message("Note: input class is 'dist' so 'type' is supposed to be 'dissimilarity'")
+    type <- "dissimilarity"
+    mat <- as.matrix(mat)
+  }
+  
+  ## 'mat'
+  if (!(nrow(mat) == ncol(mat)))
+    stop("Input matrix is not a square matrix")
+  if (any(is.na(mat)))
+    stop("Missing values in the input")
+  
+  if (inclass %in% c("matrix", "dist")) {
+    if (!is.numeric(mat))
+      stop("Input matrix is not numeric")
+    p <- nrow(mat)
+  } else if (inclass %in% c("dgCMatrix", "dsCMatrix")) {
+    if (mat@Dim[1] != mat@Dim[2])
+      stop("Input matrix is not a square matrix")
+    p <- mat@Dim[1]
+  }
+  
+  if (inclass != "dgCMatrix") {
+    if (!(isSymmetric(mat)))
+      stop("Input matrix is not symmetric")
+  }
+  
+  ### transformed the dissimilarity in an arbitrary normalized similarity    
+  if (type == "dissimilarity") {
+    mat <- 1 - 0.5*(mat^2)
+  }
+  if ((type == "dissimilarity") & (inclass %in% c("dgCMatrix", "dsCMatrix"))) {
+    stop("'type' can only be 'similarity' with sparse Matrix inputs")
+  }
+  
+  ## 'h'
+  if (!is.numeric(h))
+    stop("Input band width 'h' must be numeric")
+  if (h != as.integer(h))
+    stop("Input band width 'h' must be an integer")
+  if (h < 0)
+    stop("Input band width 'h' must be non negative")
+  if (h >= p) 
+    stop("Input band width 'h' must be strictly less than dimensions of matrix")
+  
+  
+  # data preprocessing
+  res_cc <- checkCondition(mat)
+  if (is.numeric(res_cc)) {
+    message(paste("Note: modifying similarity to ensure positive heights...
+      added", res_cc, "to diagonal (merges will not be affected)"))
+    mat <- mat + diag(rep(res_cc, ncol(mat)))
+  }
+      
+  out_matL <- matL(mat, h)
+  out_matR <- matR(mat, h)
+  
+  ## computing pencils
+  rCumL <- rowCumsums(out_matL) # p x (h+1) matrix
+  rcCumL <- colCumsums(rCumL) # p x (h+1) matrix
     
-    CLASS <- c("matrix", "dgCMatrix", "dsCMatrix", "dist")
-    classcheck <- pmatch(class(mat), CLASS)
+  rCumR <- rowCumsums(out_matR) # p x (h+1) matrix
+  rcCumR <- colCumsums(rCumR) # p x (h+1) matrix
+  
+  ## initialization (heap, D and chainedL are too large in order to avoid memory pb in C)
+  gains <- rep(0, p-1)
+  merge <- matrix(0, nrow = p-1, ncol = 2) # matrix of the merges
+  traceW <- matrix(0, nrow = p-1, ncol = 2) # matrix of traceW
+  sd1 <- out_matL[1:(p-1),2]/2 # similarity of objects with their right neighbors
+  sii <- out_matL[1:p,1] # auto-similarity of objects
     
-    if (is.na(classcheck)) {
-        stop("Input matrix class not supported")
-    }
-    if (classcheck == -1) {
-        stop("Ambiguous matrix class")
-    }
-    class <- CLASS[classcheck]
+  ## initialization of the heap
+  heap <- as.integer(rep(-1, 3*p))
+  lHeap <- length(heap)
+  v <- 1:(p-1)
+  heap[v] <- v
+  D <- rep(-1, 3*p)
+  
+  ## linkage value of objects with their right neighbors
+  D[v] <- (sii[1:(p-1)] + sii[2:p]) / 2 - sd1 
+  ## initialization of the length of the Heap
+  lHeap <- p-1
+  ## each element contains a vector: c(cl1, cl2, label1, label2, posL, posR, valid)
+  chainedL <- matrix(-1, nrow = 12, ncol = 3*p)
+  rownames(chainedL) <- c("minCl1", "maxCl1", "minCl2", "maxCl2", "lab1", 
+                          "lab2", "posL", "posR", "Sii", "Sjj", "Sij", "valid")
+  w <- as.integer(v + 1)
+  chainedL[1,v] <- v
+  chainedL[2,v] <- v
+  chainedL[3,v] <- w
+  chainedL[4,v] <- w
+  chainedL[5,v] <- -v
+  chainedL[6,v] <- -w
+  chainedL[7,v] <- v - 1
+  chainedL[8,v] <- w
+  chainedL[9,v] <- sii[1:(p-1)]
+  chainedL[10,v] <- sii[2:p]
+  chainedL[11,v] <- sd1
+  chainedL[12,v] <- 1
+  chainedL[7,1] <- -1
+  chainedL[8,p-1] <- -1
+
+  heap <- buildHeap(heap, D, lHeap)
+  
+  # performing clustering  
+  res <- .Call("cWardHeaps", rcCumR, rcCumL, as.integer(h), as.integer(p), 
+               chainedL, heap, D, as.integer(lHeap), merge, gains, traceW, 
+               PACKAGE = "adjclust")
     
-    type <- match.arg(type)
+  # formatting outputs (as 'hclust') and checking if decreasing heights are present
+  height <- gains
+  if (is.null(rownames(mat))) {
+    labels <- as.character(1:p)
+  } else {
+    labels <- rownames(mat)
+  }
+  tree <- list(merge = res,
+               height = height,
+               order = 1:p,
+               labels = labels,
+               call = match.call(),
+               method = "adjClust",
+               dist.method = attr(D, "method"),
+               data = mat)
+  class(tree) <- c("chac")
     
-    if (class == "matrix") {
-        if (!(nrow(mat) == ncol(mat)))
-            stop("Input matrix is not a square matrix")
-        if (!is.numeric(mat))
-            stop("Input matrix is not numeric")
-        if (!(isSymmetric.matrix(mat)))
-            stop("Input matrix is not symmetric")
-        if (any(is.na(mat)))
-            stop("Missing values in the input")
-        
-        p <- nrow(mat)
-        if (h >= p) 
-            stop("Input band width should be strictly less than dimensions of matrix")
-        
-        
-        if (type == "dissimilarity") {
-            mat <- 1 - 0.5*(mat^2)
-        }
-        
-        ## modifiy (if required) input similarity matrix
-        ##  and return a similiarity matrix with diagonal 1
-        mat <- modify(mat, as.integer(p), as.integer(h)) 
-        
-        matL <- findMatL(mat, as.integer(p), as.integer(h))
-        rotatedMatR <- findRMatR(mat, as.integer(p), as.integer(h))
-        
-    } else if (class == "dgCMatrix" || class == "dsCMatrix") {   
-        ## dgC/dsC sparse matrices
-        
-        if (mat@Dim[1] != mat@Dim[2])
-            stop("Input matrix is not a square matrix")
-        if (any(!(is.numeric(mat@x))))
-            stop("Input matrix is not numeric")
-        
-        p <- mat@Dim[1]
-        
-        mat <- sparseBand(mat@x, mat@p, mat@i, as.integer(p), as.integer(h))
-        mat <- modifySparse(mat, as.integer(p), as.integer(h))
-        
-        matL <- findSparseMatL(mat, as.integer(p), as.integer(h))
-        rotatedMatR <- findSparseRMatR(mat, as.integer(p), as.integer(h))
-        
-    } else if (class=="dist") { 
-        ## for dist objects 
-        mat <- as.matrix(mat)
-        p <- nrow(mat)
-        if (length(h)==0) { 
-            ## h defaults to 'ncol(mat)-1' which is 'numeric(0)'
-            ## if the *input* 'mat' is of type 'dist'
-            h <- ncol(mat)-1
-        }
-        
-        if (h >= p)
-            stop("Input band width should be strictly less than dimensions of matrix")
-        
-        mat <- 1 - 0.5*(mat^2)
-        
-        matL <- findMatL(mat, p, h)
-        rotatedMatR <- findRMatR(mat, p, h)        
-    } else {
-        stop("Input matrix class not supported")
-    }
+  if (any(diff(tree$height) < 0)) 
+    message(paste("Note:", sum(diff(tree$height) < 0),
+                  "merges with non increasing heights."))
     
-    rCumL <- rowCumsums(matL)          ## p x h matrix
-    rcCumL <- colCumsums(rCumL)        ## p x h matrix
-    
-    rCumR <- rowCumsums(rotatedMatR)   ## p x h matrix
-    rcCumR <- colCumsums(rCumR)        ## p x h matrix
-    
-    ## initialization
-    gains <- rep(0, p-blMin)
-    merge <- matrix(0, nrow = p-blMin, ncol = 2)   ## matrix of the merges
-    traceW <- matrix(0, nrow = p-blMin, ncol = 2)  ## matrix of traceW
-    sd1 <- matL[1:(p-1),1]
-    
-    ## initialization of the heap
-    heap <- as.integer(rep(-1, 3*p))
-    lHeap <- length(heap)
-    v <- 1:(p - 1)
-    heap[v] <- v
-    D <- rep(-1, 3*p)
-    D[v] <- 1 - sd1
-    ## initialization of the length of the Heap
-    lHeap <- p - 1
-    ## each element contains a vector: c(cl1, cl2, label1, label2, posL, posR, valid)
-    chainedL <- matrix(-1, nrow = 12, ncol = 3*p)
-    rownames(chainedL) <- c("minCl1", "maxCl1", "minCl2", "maxCl2", "lab1", 
-                            "lab2", "posL", "posR", "Sii", "Sjj", "Sij", "valid")
-    w <- as.integer(v + 1)
-    chainedL[1,v] <- v
-    chainedL[2,v] <- v
-    chainedL[3,v] <- w
-    chainedL[4,v] <- w
-    chainedL[5,v] <- -v
-    chainedL[6,v] <- -w
-    chainedL[7,v] <- v - 1
-    chainedL[8,v] <- w
-    chainedL[9,v] <- 1
-    chainedL[10,v] <- 1
-    chainedL[11,v] <- sd1
-    chainedL[12,v] <- 1
-    chainedL[7,1] <- -1
-    chainedL[8,p-1] <- -1
-    heap <- buildHeap(heap, D, lHeap)
-    
-    res <- .Call("cWardHeaps", rcCumR, rcCumL, as.integer(h), as.integer(p), 
-                 chainedL, heap, D, as.integer(lHeap), merge, gains, traceW, 
-                 as.integer(blMin), PACKAGE = "adjclust")
-    
-    height <- cumsum(gains)
-    tree <- list(traceW = traceW,
-                 gains = gains,
-                 merge = res,
-                 height = height,
-                 seqdist = height,
-                 order = 1:p,
-                 labels = paste("",1:p),
-                 method = "adjClust",
-                 call = match.call(),
-                 dist.method = attr(D, "method"),
-                 data = mat)
-    class(tree) <- c("chac")
-    return(tree)
+  return(tree)
 }
 

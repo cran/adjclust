@@ -3,12 +3,20 @@ title: "Clustering of Hi-C contact maps"
 author: "Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix"
 date: "`r Sys.Date()`"
 output: 
-  BiocStyle::html_document
+  html_document:
+    toc: yes
 vignette: >
   %\VignetteIndexEntry{Clustering of Hi-C contact maps}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r skipNoHITC}
+# this vignette is not created if HiTC is not installed
+if (!require("HiTC", quietly = TRUE)) {
+  knitr::opts_chunk$set(eval = FALSE)
+}
+```
 
 # Introduction
 
@@ -28,7 +36,6 @@ used for adjacency-constrained (HAC) is described in the third chapter of [2].
 
 ```{r loadLib, message = FALSE}
 library("adjclust")
-library("HiTC")
 ```
 
 # Loading and displaying a sample Hi-C contact map
@@ -38,7 +45,7 @@ obtained from the `HiTC` package [3]. It is a contact map corresponding to
 chromosome X vs chromosome X. 
 
 ```{r loadData}
-data("hic_imr90_40_XX", package = "adjclust")
+load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
 ```
 
 Now we have a look at the data.

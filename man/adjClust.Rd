@@ -4,8 +4,7 @@
 \alias{adjClust}
 \title{Adjacency-constrained Clustering}
 \usage{
-adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1,
-  blMin = 1, verbose = FALSE)
+adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1)
 }
 \arguments{
 \item{mat}{A similarity matrix or a dist object}
@@ -16,14 +15,15 @@ adjClust(mat, type = c("similarity", "dissimilarity"), h = ncol(mat) - 1,
 \item{h}{band width. It is assumed that the similarity between two items is 0
 when these items are at a distance of more than band width h. Default value
 is \code{ncol(mat)-1}}
-
-\item{blMin}{depth of clustering. It is the number of clusters below which 
-the algorithm stops. Default value is 1}
-
-\item{verbose}{Currently not used}
 }
 \value{
-An object of class \code{\link{chac}}.
+An object of class \code{\link{chac}} which describes the tree 
+produced by the clustering process. The object a list with the same elements 
+as an object of class \code{\link{chac}} (\code{merge}, \code{height}, 
+\code{order}, \code{labels}, \code{call}, \code{method}, \code{dist.method}),
+and an extra element \code{mat}: the data on which the clustering is 
+performed, possibly after pre-transformations described in the vignette 
+entitled "Notes on CHAC implementation in adjclust".
 }
 \description{
 Adjacency-constrained hierarchical agglomerative clustering

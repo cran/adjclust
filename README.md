@@ -2,6 +2,8 @@
 adjclust: Adjacency-constrained clustering
 ==========================================
 
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/adjclust)](https://cran.r-project.org/package=adjclust) [![Travis Build Status](https://travis-ci.org/pneuvial/adjclust.svg?branch=develop)](https://travis-ci.org/pneuvial/adjclust) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/pneuvial/adjclust?branch=develop&svg=true)](https://ci.appveyor.com/project/pneuvial/adjclust) [![Coverage Status](https://img.shields.io/codecov/c/github/pneuvial/adjclust/develop.svg)](https://codecov.io/github/pneuvial/adjclust/branch/develop)
+
 `adjclust` is a package that provides methods to perform adjacency-constrained hierarchical agglomerative clustering. Adjacency-constrained hierarchical agglomerative clustering is hierarchical agglomerative clustering (HAC) in which each observation is associated to a position, and the clustering is constrained so as only adjacent clusters are merged. It is useful in bioinformatics (e.g. Genome Wide Association Studies or Hi-C data analysis).
 
 `adjclust` provides three user level functions: `adjClust`, `snpClust` and `hicClust`, which are briefly explained below.
@@ -58,6 +60,7 @@ image(ld.ceph, lwd = 0)
 ``` r
 
 fit <- snpClust(geno, stats = "R.squared", h = h)
+#> Note: 125 merges with non increasing heights.
 plot(fit)
 ```
 
@@ -86,6 +89,7 @@ mapC(binned)
 ``` r
 
 fitB <- hicClust(binned)
+#> Note: 32 merges with non increasing heights.
 plot(fitB)
 ```
 

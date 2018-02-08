@@ -1,9 +1,14 @@
+## ----skipNoSNPSTATS------------------------------------------------------
+# this vignette is not created if snpStats is not installed
+if (!require("snpStats")) {
+  knitr::opts_chunk$set(eval = FALSE)
+}
+
 ## ----loadLib, message=FALSE----------------------------------------------
 library("adjclust")
 
 ## ----loadData, results="hide", message=FALSE-----------------------------
 library("matrixStats")
-library("snpStats")
 data("ld.example", package = "snpStats")
 
 ## ----preData-------------------------------------------------------------
@@ -13,7 +18,7 @@ nSamples <- nrow(geno)
 geno
 
 ## ----LD------------------------------------------------------------------
-ld.ceph <- ld(geno, stats = "R.squared", depth = p-1)
+ld.ceph <- snpStats::ld(geno, stats = "R.squared", depth = p-1)
 image(ld.ceph, lwd = 0)
 
 ## ----snpClust------------------------------------------------------------
@@ -31,7 +36,7 @@ head(cbind(fitH$merge, fitH$gains))
 
 ## ----snpClust-LD---------------------------------------------------------
 h <- 100
-ld.ceph <- ld(geno, stats = "R.squared", depth = h)
+ld.ceph <- snpStats::ld(geno, stats = "R.squared", depth = h)
 image(ld.ceph, lwd = 0)
 
 ## ----correctRound--------------------------------------------------------

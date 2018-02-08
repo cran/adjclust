@@ -1,9 +1,14 @@
+## ----skipNoHITC----------------------------------------------------------
+# this vignette is not created if HiTC is not installed
+if (!require("HiTC", quietly = TRUE)) {
+  knitr::opts_chunk$set(eval = FALSE)
+}
+
 ## ----loadLib, message = FALSE--------------------------------------------
 library("adjclust")
-library("HiTC")
 
 ## ----loadData------------------------------------------------------------
-data("hic_imr90_40_XX", package = "adjclust")
+load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
 
 ## ----mapHiC, message=FALSE-----------------------------------------------
 HiTC::mapC(hic_imr90_40_XX)
