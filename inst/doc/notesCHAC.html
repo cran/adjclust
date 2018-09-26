@@ -11,7 +11,7 @@
 
 <meta name="author" content="Pierre Neuvial, Nathalie Villa-Vialaneix" />
 
-<meta name="date" content="2018-02-08" />
+<meta name="date" content="2018-09-26" />
 
 <title>Implementation notes for the adjclust package</title>
 
@@ -36,7 +36,7 @@ if (window.hljs) {
   hljs.configure({languages: []});
   hljs.initHighlightingOnLoad();
   if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlightingOnLoad(); }, 0);
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
   }
 }
 </script>
@@ -121,7 +121,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Implementation notes for the <code>adjclust</code> package</h1>
 <h4 class="author"><em>Pierre Neuvial, Nathalie Villa-Vialaneix</em></h4>
-<h4 class="date"><em>2018-02-08</em></h4>
+<h4 class="date"><em>2018-09-26</em></h4>
 
 </div>
 
@@ -141,6 +141,7 @@ $(document).ready(function () {
 <li><a href="#mode-within-disp"><code>mode = &quot;within-disp&quot;</code></a></li>
 <li><a href="#mode-average-disp"><code>mode = &quot;average-disp&quot;</code></a></li>
 </ul></li>
+<li><a href="#relations-with-hclust-and-rioja">Relations with ‘hclust’ and ‘rioja’</a></li>
 <li><a href="#references">References</a></li>
 </ul>
 </div>
@@ -189,7 +190,7 @@ $(document).ready(function () {
 </div>
 <div id="case-of-dissimilarity-data" class="section level3">
 <h3>Case of dissimilarity data</h3>
-<p>The original implementation of (unconstrained) HAC in <code>stats::hclust</code> takes as input a dissimilarity matrix. However, the implementation of <code>adjclust</code> is based on a kernel/similarity approach. We describe in this section how the case of dissimilarity is handled.</p>
+<p>The original implementation of (unconstrained) HAC in <code>stats::hclust</code> takes as input a dissimilarity matrix. However, the implementation of <code>adjclust</code> is based on a kernel/similarity approach. We describe in this section how the dissimilarity case is handled.</p>
 <p>Suppose given a dissimilarity <span class="math inline">\(d\)</span> which satisfies:</p>
 <ul>
 <li><p><span class="math inline">\(d\)</span> has non negative entries: <span class="math inline">\(d(i,j) \geq 0\)</span> for all <span class="math inline">\(i=1,\ldots,n\)</span>;</p></li>
@@ -245,6 +246,11 @@ $(document).ready(function () {
 <h2><code>mode = &quot;average-disp&quot;</code></h2>
 <p>This last option addresses the problem of the dependency to cluster sizes posed by the previous method (<code>&quot;within-disp&quot;</code>) by using the average within-cluster dispersion of the two clusters being merged at avery given step of the algorithm. This criterion is also a cluster specific one but does not guaranty the absence of reversals in heights.</p>
 </div>
+</div>
+<div id="relations-with-hclust-and-rioja" class="section level1">
+<h1>Relations with ‘hclust’ and ‘rioja’</h1>
+<p>As documented in [4], the call to <code>hclust(..., method = &quot;Ward.D&quot;)</code> implicitely supposes that <code>...</code> is a <em>squared</em> distance matrix. As explained above, we did not make such an assumption so <code>hclust(d^2, method = &quot;Ward.D&quot;)</code> and <code>adjClust(d, method = &quot;dissimilarity&quot;)</code> give identical results when the ordering of the (unconstrained) clustering is compatible with the natural ordering of objects used as a constraint. In addition, since <code>hclust(..., method = &quot;Ward.D2&quot;)</code> takes for linkage <span class="math inline">\(\sqrt{m_t}\)</span>, <code>hclust(d, method = &quot;Ward.D2&quot;)</code> and <code>adjClust(d, method = &quot;dissimilarity&quot;)</code> give identical results for the merges and the slot <code>height</code> of the first is the square root of the slot <code>height</code> of the second, when the ordering of the (unconstrained) clustering is compatible with the natural ordering of objects used as a constraint.</p>
+<p>Finally, <code>rioja</code> uses ESS<span class="math inline">\(_t\)</span> to display the heights of the dendrogram (because, as documented above, this quantity is non decreasing, in the Euclidean case, even for constrained clusterings). Hence, <code>rioja(d, method = &quot;coniss&quot;)</code> and <code>adjClust(d, method = &quot;dissimilarity&quot;)</code> give identical results for the merges and the slot <code>height</code> of the first is the cumulative sum of the slot <code>height</code> of the second.</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>

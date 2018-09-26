@@ -11,7 +11,7 @@
 
 <meta name="author" content="Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix" />
 
-<meta name="date" content="2018-02-08" />
+<meta name="date" content="2018-09-26" />
 
 <title>Inferring Linkage Disequilibrium blocks from genotypes</title>
 
@@ -36,7 +36,7 @@ if (window.hljs) {
   hljs.configure({languages: []});
   hljs.initHighlightingOnLoad();
   if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlightingOnLoad(); }, 0);
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
   }
 }
 </script>
@@ -121,7 +121,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Inferring Linkage Disequilibrium blocks from genotypes</h1>
 <h4 class="author"><em>Shubham Chaturvedi, Pierre Neuvial, Nathalie Villa-Vialaneix</em></h4>
-<h4 class="date"><em>2018-02-08</em></h4>
+<h4 class="date"><em>2018-09-26</em></h4>
 
 </div>
 
@@ -178,14 +178,18 @@ image(ld.ceph, lwd = 0)</code></pre>
 <h1>Adjacency-constrained Hierarchical Agglomerative Clustering</h1>
 <p>The <code>snpClust</code> function can handle genotype data as an input:</p>
 <pre class="r"><code>fit &lt;- snpClust(geno, stats = &quot;R.squared&quot;)</code></pre>
+<pre><code>## Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity
+## to be smaller than or equal to 1</code></pre>
 <pre><code>## Note: 134 merges with non increasing heights.</code></pre>
 <p>The above figure suggests that the LD signal is concentrated close to the diagonal. We can focus on a diagonal band with the bandwidth parameter <code>h</code>:</p>
 <pre class="r"><code>fitH &lt;- snpClust(geno, h = 100, stats = &quot;R.squared&quot;)</code></pre>
+<pre><code>## Warning in run.snpClust(x, h = h, stats = stats): Forcing the LD similarity
+## to be smaller than or equal to 1</code></pre>
 <pre><code>## Note: 132 merges with non increasing heights.</code></pre>
 <pre class="r"><code>fitH</code></pre>
 <pre><code>## 
 ## Call:
-## adjClust(mat = x, type = &quot;similarity&quot;, h = h)
+## run.adjclust(mat = mat, type = type, h = h)
 ## 
 ## Cluster method   : snpClust 
 ## Number of objects: 602</code></pre>
@@ -237,9 +241,9 @@ fitM &lt;- snpClust(geno, h, stats = &quot;R.squared&quot;)</code></pre>
 <div id="session-information" class="section level1">
 <h1>Session information</h1>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 3.4.3 (2017-11-30)
+<pre><code>## R version 3.4.4 (2018-03-15)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 16.04.3 LTS
+## Running under: Ubuntu 16.04.5 LTS
 ## 
 ## Matrix products: default
 ## BLAS: /usr/lib/libblas/libblas.so.3.6.0
@@ -258,28 +262,29 @@ fitM &lt;- snpClust(geno, h, stats = &quot;R.squared&quot;)</code></pre>
 ## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] matrixStats_0.52.2   snpStats_1.26.0      Matrix_1.2-12       
-##  [4] survival_2.41-3      adjclust_0.5.6       HiTC_1.20.0         
-##  [7] GenomicRanges_1.28.4 GenomeInfoDb_1.12.2  IRanges_2.10.2      
-## [10] S4Vectors_0.14.3     BiocGenerics_0.22.0 
+##  [1] matrixStats_0.53.1   snpStats_1.26.0      Matrix_1.2-12       
+##  [4] survival_2.42-6      adjclust_0.5.7       HiTC_1.20.0         
+##  [7] GenomicRanges_1.28.6 GenomeInfoDb_1.12.3  IRanges_2.10.5      
+## [10] S4Vectors_0.14.7     BiocGenerics_0.22.1 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.13               compiler_3.4.3            
+##  [1] Rcpp_0.12.17               compiler_3.4.4            
 ##  [3] RColorBrewer_1.1-2         XVector_0.16.0            
-##  [5] bitops_1.0-6               tools_3.4.3               
-##  [7] zlibbioc_1.22.0            digest_0.6.12             
+##  [5] bitops_1.0-6               tools_3.4.4               
+##  [7] zlibbioc_1.22.0            digest_0.6.15             
 ##  [9] evaluate_0.10.1            lattice_0.20-35           
-## [11] DelayedArray_0.2.7         yaml_2.1.14               
-## [13] GenomeInfoDbData_0.99.0    rtracklayer_1.36.4        
-## [15] stringr_1.2.0              knitr_1.17                
-## [17] Biostrings_2.44.2          rprojroot_1.2             
-## [19] grid_3.4.3                 Biobase_2.36.2            
-## [21] XML_3.98-1.9               BiocParallel_1.10.1       
-## [23] rmarkdown_1.7              magrittr_1.5              
-## [25] backports_1.1.1            Rsamtools_1.28.0          
-## [27] htmltools_0.3.6            GenomicAlignments_1.12.2  
-## [29] splines_3.4.3              SummarizedExperiment_1.6.3
-## [31] stringi_1.1.5              RCurl_1.95-4.8</code></pre>
+## [11] DelayedArray_0.2.7         yaml_2.1.19               
+## [13] GenomeInfoDbData_0.99.0    rtracklayer_1.36.6        
+## [15] stringr_1.3.0              knitr_1.20                
+## [17] Biostrings_2.44.2          rprojroot_1.3-2           
+## [19] grid_3.4.4                 Biobase_2.36.2            
+## [21] XML_3.98-1.10              BiocParallel_1.10.1       
+## [23] rmarkdown_1.9              magrittr_1.5              
+## [25] splines_3.4.4              backports_1.1.2           
+## [27] Rsamtools_1.28.0           htmltools_0.3.6           
+## [29] GenomicAlignments_1.12.2   MASS_7.3-50               
+## [31] SummarizedExperiment_1.6.5 capushe_1.1.1             
+## [33] stringi_1.2.3              RCurl_1.95-4.10</code></pre>
 </div>
 <div class="footnotes">
 <hr />

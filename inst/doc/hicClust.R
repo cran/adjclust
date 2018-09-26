@@ -10,6 +10,9 @@ library("adjclust")
 ## ----loadData------------------------------------------------------------
 load(system.file("extdata", "hic_imr90_40_XX.rda", package = "adjclust"))
 
+## ----create-data-script, eval=FALSE--------------------------------------
+#  system.file("system/create_hic_chrXchrX.R", package="adjclust")
+
 ## ----mapHiC, message=FALSE-----------------------------------------------
 HiTC::mapC(hic_imr90_40_XX)
 
@@ -17,7 +20,7 @@ HiTC::mapC(hic_imr90_40_XX)
 fit <- hicClust(hic_imr90_40_XX)
 
 ## ----binning, message=FALSE----------------------------------------------
-binned <- HiTC::binningC(hic_imr90_40_XX, binsize = 5e5)
+binned <- HiTC::binningC(hic_imr90_40_XX, binsize = 1e5)
 HiTC::mapC(binned)
 fitB <- hicClust(binned)
 fitB

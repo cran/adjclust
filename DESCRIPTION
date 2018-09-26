@@ -7,9 +7,9 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
              person("Pierre", "Neuvial", role=c("aut", "cre"), 
                  email="pierre.neuvial@math.univ-toulouse.fr"),
              person("Guillem", "Rigaill", role="aut"),
-             person("Nathalie", "Villa-Vialaneix", role="aut"))
-Date: 2018-02-08
-Version: 0.5.6
+             person("Nathalie", "Vialaneix", role="aut"))
+Date: 2018-09-26
+Version: 0.5.7
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity
         Matrix
@@ -23,20 +23,22 @@ Description: Implements a constrained version of hierarchical agglomerative
     Chapter 4 of Alia Dehman (2015) 
     <https://hal.archives-ouvertes.fr/tel-01288568v1>.
 Depends: R(>= 2.10.0)
-Imports: Matrix, matrixStats, methods, utils
-Suggests: knitr, testthat, rmarkdown, rioja, HiTC, snpStats
+Imports: stats, graphics, grDevices, Matrix, matrixStats, methods,
+        utils, capushe
+Suggests: knitr, testthat, rmarkdown, rioja, HiTC, snpStats,
+        BiocGenerics
 VignetteBuilder: knitr
 URL: https://github.com/pneuvial/adjclust
 BugReports: https://github.com/pneuvial/adjclust/issues
 RoxygenNote: 6.0.1.9000
 NeedsCompilation: yes
-Packaged: 2018-02-08 18:53:45 UTC; nathalie
+Packaged: 2018-09-26 19:19:42 UTC; nathalie
 Author: Christophe Ambroise [aut],
   Shubham Chaturvedi [aut],
   Alia Dehman [aut],
   Michel Koskas [aut],
   Pierre Neuvial [aut, cre],
   Guillem Rigaill [aut],
-  Nathalie Villa-Vialaneix [aut]
+  Nathalie Vialaneix [aut]
 Repository: CRAN
-Date/Publication: 2018-02-08 19:44:12 UTC
+Date/Publication: 2018-09-26 21:00:03 UTC
