@@ -36,12 +36,8 @@ head(cbind(fitH$merge, fitH$gains))
 
 ## ----snpClust-LD---------------------------------------------------------
 h <- 100
-ld.ceph <- snpStats::ld(geno, stats = "R.squared", depth = h)
+ld.ceph <- snpStats::ld(geno, stats = "R.squared", depth = h, symmetric = TRUE)
 image(ld.ceph, lwd = 0)
-
-## ----correctRound--------------------------------------------------------
-max(ld.ceph - 1)
-ld.ceph <- round(ld.ceph, digits = 10)
 
 ## ----snpClust-sMatrix----------------------------------------------------
 fitL <- snpClust(ld.ceph, h)
