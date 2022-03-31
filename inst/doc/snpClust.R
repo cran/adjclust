@@ -1,5 +1,5 @@
 ## ----skipNoSNPSTATS-----------------------------------------------------------
-# this vignette is not created if snpStats is not installed
+# IMPORTANT: this vignette is not created if snpStats is not installed
 if (!require("snpStats")) {
   knitr::opts_chunk$set(eval = FALSE)
 }
