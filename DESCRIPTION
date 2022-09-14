@@ -8,8 +8,8 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
              person("Guillem", "Rigaill", role="aut"),
              person("Nathalie", "Vialaneix", role="aut"),             
              person("Gabriel", "Hoffman", role="aut"))
-Date: 2022-08-18
-Version: 0.6.5
+Date: 2022-09-13
+Version: 0.6.6
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity
         Matrix
@@ -31,12 +31,12 @@ biocViews: Clustering, FeatureExtraction
 VignetteBuilder: knitr
 URL: https://pneuvial.github.io/adjclust/
 BugReports: https://github.com/pneuvial/adjclust/issues
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
 Language: en-US
 NeedsCompilation: yes
-Packaged: 2022-08-18 10:49:04 UTC; nathalie
+Packaged: 2022-09-14 21:40:32 UTC; pneuvial
 Author: Christophe Ambroise [aut],
   Shubham Chaturvedi [aut],
   Alia Dehman [aut],
@@ -45,4 +45,4 @@ Author: Christophe Ambroise [aut],
   Nathalie Vialaneix [aut],
   Gabriel Hoffman [aut]
 Repository: CRAN
-Date/Publication: 2022-08-18 14:30:02 UTC
+Date/Publication: 2022-09-14 22:00:03 UTC
