@@ -8,8 +8,8 @@ Authors@R: c(person("Christophe", "Ambroise", role="aut"),
              person("Guillem", "Rigaill", role="aut"),
              person("Nathalie", "Vialaneix", role="aut"),             
              person("Gabriel", "Hoffman", role="aut"))
-Date: 2023-04-24
-Version: 0.6.7
+Date: 2024-01-10
+Version: 0.6.8
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity
         Matrix
@@ -36,7 +36,7 @@ LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
 Language: en-US
 NeedsCompilation: yes
-Packaged: 2023-04-26 07:24:25 UTC; nathalie
+Packaged: 2024-01-13 09:58:58 UTC; nathalie
 Author: Christophe Ambroise [aut],
   Shubham Chaturvedi [aut],
   Alia Dehman [aut],
@@ -45,4 +45,4 @@ Author: Christophe Ambroise [aut],
   Nathalie Vialaneix [aut],
   Gabriel Hoffman [aut]
 Repository: CRAN
-Date/Publication: 2023-04-27 18:20:02 UTC
+Date/Publication: 2024-01-13 16:10:06 UTC

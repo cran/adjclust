@@ -11,7 +11,7 @@
 
 <meta name="author" content="Shubham Chaturvedi, Pierre Neuvial, Nathalie Vialaneix" />
 
-<meta name="date" content="2023-04-26" />
+<meta name="date" content="2024-01-13" />
 
 <title>Inferring Linkage Disequilibrium blocks from genotypes</title>
 
@@ -299,23 +299,17 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before {
-content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "\e259";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "";
-border: none;
-}
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "";
+content: "\e258";
 font-family: 'Glyphicons Halflings';
-display: inline-block;
-padding: 10px;
-border-right: 1px solid #ddd;
+border: none;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -360,7 +354,7 @@ display: none;
 from genotypes</h1>
 <h4 class="author">Shubham Chaturvedi, Pierre Neuvial, Nathalie
 Vialaneix</h4>
-<h4 class="date">2023-04-26</h4>
+<h4 class="date">2024-01-13</h4>
 
 </div>
 
@@ -517,13 +511,13 @@ Classification</em>, <strong>38</strong>, 363–389.</p>
 <div id="session-information" class="section level1">
 <h1>Session information</h1>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.2.3 (2023-03-15)
+<pre><code>## R version 4.3.2 (2023-10-31)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 22.04.2 LTS
+## Running under: Ubuntu 22.04.3 LTS
 ## 
 ## Matrix products: default
-## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
-## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so
+## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
+## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -533,55 +527,56 @@ Classification</em>, <strong>38</strong>, 363–389.</p>
 ##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
 ## [11] LC_MEASUREMENT=fr_FR.UTF-8 LC_IDENTIFICATION=C       
 ## 
+## time zone: Europe/Paris
+## tzcode source: system (glibc)
+## 
 ## attached base packages:
 ## [1] stats4    stats     graphics  grDevices utils     datasets  methods  
 ## [8] base     
 ## 
 ## other attached packages:
-##  [1] snpStats_1.46.0      Matrix_1.5-1         survival_3.5-3      
-##  [4] adjclust_0.6.7       HiTC_1.40.0          GenomicRanges_1.48.0
-##  [7] GenomeInfoDb_1.32.4  IRanges_2.30.1       S4Vectors_0.34.0    
-## [10] BiocGenerics_0.42.0 
+##  [1] snpStats_1.52.0      Matrix_1.6-4         survival_3.5-7      
+##  [4] adjclust_0.6.8       HiTC_1.44.0          GenomicRanges_1.52.0
+##  [7] GenomeInfoDb_1.36.0  IRanges_2.34.0       S4Vectors_0.38.1    
+## [10] BiocGenerics_0.46.0 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] MatrixGenerics_1.8.1        Biobase_2.56.0             
-##  [3] viridis_0.6.2               sass_0.4.1                 
-##  [5] splines_4.2.3               jsonlite_1.8.0             
-##  [7] viridisLite_0.4.0           bslib_0.3.1                
-##  [9] assertthat_0.2.1            highr_0.9                  
-## [11] GenomeInfoDbData_1.2.8      Rsamtools_2.12.0           
-## [13] yaml_2.3.5                  pillar_1.7.0               
-## [15] lattice_0.20-45             glue_1.6.2                 
-## [17] digest_0.6.29               RColorBrewer_1.1-3         
-## [19] XVector_0.36.0              colorspace_2.0-3           
-## [21] htmltools_0.5.2             XML_3.99-0.10              
-## [23] pkgconfig_2.0.3             zlibbioc_1.42.0            
-## [25] purrr_0.3.4                 scales_1.2.0               
-## [27] BiocParallel_1.30.3         tibble_3.1.7               
-## [29] generics_0.1.2              ggplot2_3.3.6              
-## [31] ellipsis_0.3.2              SummarizedExperiment_1.26.1
-## [33] cli_3.3.0                   magrittr_2.0.3             
-## [35] crayon_1.5.1                evaluate_0.15              
-## [37] fansi_1.0.3                 MASS_7.3-58.3              
-## [39] tools_4.2.3                 BiocIO_1.6.0               
-## [41] lifecycle_1.0.1             matrixStats_0.62.0         
-## [43] stringr_1.4.0               capushe_1.1.1              
-## [45] munsell_0.5.0               DelayedArray_0.22.0        
-## [47] Biostrings_2.64.1           compiler_4.2.3             
-## [49] jquerylib_0.1.4             rlang_1.0.2                
-## [51] grid_4.2.3                  RCurl_1.98-1.6             
-## [53] rstudioapi_0.13             rjson_0.2.21               
-## [55] bitops_1.0-7                rmarkdown_2.14             
-## [57] restfulr_0.0.15             gtable_0.3.0               
-## [59] codetools_0.2-19            DBI_1.1.3                  
-## [61] R6_2.5.1                    GenomicAlignments_1.32.1   
-## [63] gridExtra_2.3               knitr_1.39                 
-## [65] dplyr_1.0.9                 rtracklayer_1.56.1         
-## [67] fastmap_1.1.0               utf8_1.2.2                 
-## [69] dendextend_1.16.0           stringi_1.7.8              
-## [71] parallel_4.2.3              Rcpp_1.0.8.3               
-## [73] vctrs_0.4.1                 sparseMatrixStats_1.8.0    
-## [75] tidyselect_1.1.2            xfun_0.30</code></pre>
+##  [1] SummarizedExperiment_1.30.1 capushe_1.1.1              
+##  [3] gtable_0.3.3                rjson_0.2.21               
+##  [5] xfun_0.39                   bslib_0.4.2                
+##  [7] ggplot2_3.4.2               Biobase_2.60.0             
+##  [9] lattice_0.22-5              vctrs_0.6.2                
+## [11] tools_4.3.2                 bitops_1.0-7               
+## [13] generics_0.1.3              parallel_4.3.2             
+## [15] tibble_3.2.1                fansi_1.0.4                
+## [17] highr_0.10                  pkgconfig_2.0.3            
+## [19] RColorBrewer_1.1-3          sparseMatrixStats_1.12.0   
+## [21] lifecycle_1.0.3             GenomeInfoDbData_1.2.10    
+## [23] compiler_4.3.2              Rsamtools_2.16.0           
+## [25] Biostrings_2.68.0           munsell_0.5.0              
+## [27] codetools_0.2-19            htmltools_0.5.5            
+## [29] sass_0.4.6                  RCurl_1.98-1.12            
+## [31] yaml_2.3.7                  pillar_1.9.0               
+## [33] crayon_1.5.2                jquerylib_0.1.4            
+## [35] MASS_7.3-60                 BiocParallel_1.34.1        
+## [37] DelayedArray_0.26.2         cachem_1.0.8               
+## [39] viridis_0.6.3               tidyselect_1.2.0           
+## [41] digest_0.6.31               dplyr_1.1.2                
+## [43] restfulr_0.0.15             splines_4.3.2              
+## [45] fastmap_1.1.1               grid_4.3.2                 
+## [47] colorspace_2.1-0            cli_3.6.1                  
+## [49] magrittr_2.0.3              S4Arrays_1.0.1             
+## [51] XML_3.99-0.14               utf8_1.2.3                 
+## [53] scales_1.2.1                rmarkdown_2.21             
+## [55] XVector_0.40.0              matrixStats_0.63.0         
+## [57] gridExtra_2.3               evaluate_0.21              
+## [59] knitr_1.42                  BiocIO_1.10.0              
+## [61] viridisLite_0.4.2           rtracklayer_1.60.0         
+## [63] rlang_1.1.1                 dendextend_1.17.1          
+## [65] Rcpp_1.0.10                 glue_1.6.2                 
+## [67] rstudioapi_0.14             jsonlite_1.8.4             
+## [69] R6_2.5.1                    MatrixGenerics_1.12.0      
+## [71] GenomicAlignments_1.36.0    zlibbioc_1.46.0</code></pre>
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr />

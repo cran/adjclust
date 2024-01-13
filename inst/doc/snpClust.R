@@ -1,3 +1,7 @@
+## ----include=FALSE------------------------------------------------------------
+# limit number of threads on OpenMP
+Sys.setenv("OMP_THREAD_LIMIT" = 2)
+
 ## ----skipNoSNPSTATS-----------------------------------------------------------
 # IMPORTANT: this vignette is not created if snpStats is not installed
 if (!require("snpStats")) {
