@@ -1,7 +1,3 @@
-## ----include=FALSE------------------------------------------------------------
-# limit number of threads on OpenMP
-Sys.setenv("OMP_THREAD_LIMIT" = 2)
-
 ## ----skipNoHITC---------------------------------------------------------------
 # IMPORTANT: this vignette can not be created if HiTC is not installed
 if (!require("HiTC", quietly = TRUE)) {

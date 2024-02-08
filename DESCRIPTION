@@ -1,15 +1,18 @@
 Package: adjclust
 Maintainer: Pierre Neuvial <pierre.neuvial@math.univ-toulouse.fr>
-Authors@R: c(person("Christophe", "Ambroise", role="aut"),
-             person("Shubham", "Chaturvedi", role="aut"),
-             person("Alia", "Dehman", role="aut"),
-             person("Pierre", "Neuvial", role=c("aut", "cre"), 
-                 email="pierre.neuvial@math.univ-toulouse.fr"),
-             person("Guillem", "Rigaill", role="aut"),
-             person("Nathalie", "Vialaneix", role="aut"),             
-             person("Gabriel", "Hoffman", role="aut"))
-Date: 2024-01-10
-Version: 0.6.8
+Authors@R: c(person("Christophe", "Ambroise", role = "aut"),
+             person("Shubham", "Chaturvedi", role = "aut"),
+             person("Alia", "Dehman", role = "aut"),
+             person("Pierre", "Neuvial", role = c("aut", "cre"), 
+                    email = "pierre.neuvial@math.univ-toulouse.fr",
+		    comment = c(ORCID = "0000-0003-3584-9998")),	
+             person("Guillem", "Rigaill", role = "aut"),
+             person("Nathalie", "Vialaneix", role = "aut", 
+                    email = "nathalie.vialaneix@inrae.fr",
+		    comment = c(ORCID = "0000-0003-1156-0639")),
+             person("Gabriel", "Hoffman", role = "aut"))
+Date: 2024-02-07
+Version: 0.6.9
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity
         Matrix
@@ -31,18 +34,18 @@ biocViews: Clustering, FeatureExtraction
 VignetteBuilder: knitr
 URL: https://pneuvial.github.io/adjclust/
 BugReports: https://github.com/pneuvial/adjclust/issues
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
 Language: en-US
 NeedsCompilation: yes
-Packaged: 2024-01-13 09:58:58 UTC; nathalie
+Packaged: 2024-02-07 23:20:23 UTC; pneuvial
 Author: Christophe Ambroise [aut],
   Shubham Chaturvedi [aut],
   Alia Dehman [aut],
-  Pierre Neuvial [aut, cre],
+  Pierre Neuvial [aut, cre] (<https://orcid.org/0000-0003-3584-9998>),
   Guillem Rigaill [aut],
-  Nathalie Vialaneix [aut],
+  Nathalie Vialaneix [aut] (<https://orcid.org/0000-0003-1156-0639>),
   Gabriel Hoffman [aut]
 Repository: CRAN
-Date/Publication: 2024-01-13 16:10:06 UTC
+Date/Publication: 2024-02-08 08:50:05 UTC
