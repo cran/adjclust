@@ -11,8 +11,8 @@ Authors@R: c(person("Christophe", "Ambroise", role = "aut"),
                     email = "nathalie.vialaneix@inrae.fr",
 		    comment = c(ORCID = "0000-0003-1156-0639")),
              person("Gabriel", "Hoffman", role = "aut"))
-Date: 2024-10-07
-Version: 0.6.10
+Date: 2025-11-19
+Version: 0.6.11
 License: GPL-3
 Title: Adjacency-Constrained Clustering of a Block-Diagonal Similarity
         Matrix
@@ -39,13 +39,15 @@ LinkingTo: Rcpp, RcppArmadillo
 Encoding: UTF-8
 Language: en-US
 NeedsCompilation: yes
-Packaged: 2024-10-07 13:21:31 UTC; nathalie
+Packaged: 2025-11-19 21:49:18 UTC; pneuvial
 Author: Christophe Ambroise [aut],
   Shubham Chaturvedi [aut],
   Alia Dehman [aut],
-  Pierre Neuvial [aut, cre] (<https://orcid.org/0000-0003-3584-9998>),
+  Pierre Neuvial [aut, cre] (ORCID:
+    <https://orcid.org/0000-0003-3584-9998>),
   Guillem Rigaill [aut],
-  Nathalie Vialaneix [aut] (<https://orcid.org/0000-0003-1156-0639>),
+  Nathalie Vialaneix [aut] (ORCID:
+    <https://orcid.org/0000-0003-1156-0639>),
   Gabriel Hoffman [aut]
 Repository: CRAN
-Date/Publication: 2024-10-08 08:10:02 UTC
+Date/Publication: 2025-11-20 06:10:35 UTC
